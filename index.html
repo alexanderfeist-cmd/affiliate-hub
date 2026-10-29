@@ -283,6 +283,7 @@ table.dir tbody tr:hover td{background:#f8f9fa}
 <div id="signin" class="signin panel" hidden>
   <h2>Sign in to Affiliate Hub</h2>
   <p>Use your Sage Microsoft account. Partner data is read from the team SharePoint site.</p>
+  <p id="signinMsg" class="note" hidden></p>
   <button class="btn" data-action="sign-in">Sign in with Microsoft</button>
 </div>
 
@@ -333,10 +334,10 @@ table.dir tbody tr:hover td{background:#f8f9fa}
    Leave clientId empty to run in demo mode with sample data.
    ============================================================ */
 const CONFIG = {
-  clientId: '7194444d-dc63-46a2-9ec4-044347545197',                          // Entra app registration: Application (client) ID
-  tenantId: '3e32dd7c-41f6-492d-a1a3-c58eb02cf4f8',                          // Entra app registration: Directory (tenant) ID
-  siteHost: 'sage365.sharepoint.com', // host of your SharePoint site
-  sitePath: '/sites/AffiliateMarketing',       // path of the site that holds the three lists
+  clientId: '',                          // Entra app registration: Application (client) ID
+  tenantId: '',                          // Entra app registration: Directory (tenant) ID
+  siteHost: 'YOURTENANT.sharepoint.com', // host of your SharePoint site
+  sitePath: '/sites/YourTeamSite',       // path of the site that holds the three lists
   lists: { partners: 'Partners', updates: 'Updates', tasks: 'Tasks', links: 'Links' },
   // Internal column names in SharePoint (create columns without spaces, rename later if you like)
   fields: {
@@ -378,7 +379,7 @@ const CONFIG = {
     items: ['Check budget pacing with agency', 'Review all blocked tasks'],
     cadence: 'weekly',                 // 'weekly' or 'monthly'
     dueWorkingDay: 2,                  // nth working day of the month (or week)
-    owner: 'alexander.feist@sage.com'                          // your name or email address; tasks go to this person
+    owner: ''                          // your name or email address; tasks go to this person
   },
   attachmentsFolder: 'Affiliate Hub Attachments',
   maxFileMB: 100,
@@ -1465,6 +1466,15 @@ async function boot(){
     ensureAuto().catch(e=>console.warn(e));
   }catch(e){
     console.error(e);
+    if(e && (e.errorCode || /AADSTS|consent|interaction_required|login_required/i.test(e.message||''))){
+      const declined=/65004|consent/i.test(e.message||'');
+      $('#app').hidden=true; $('#signin').hidden=false;
+      const m=$('#signinMsg'); m.hidden=false;
+      m.textContent = declined
+        ? 'Sign in was stopped before permission was given. Click Sign in again and choose Accept. If Microsoft says admin approval is needed, ask IT to grant consent for the Affiliate Hub app.'
+        : 'Sign in did not complete: '+(e.message||'unknown error')+'. Try again.';
+      return;
+    }
     $('#sections').innerHTML = `<div class="panel error-box"><h2>Affiliate Hub could not load the data</h2>
       <p>${esc(e.message)}</p><p class="note">Check <code>siteHost</code>, <code>sitePath</code> and the list names in CONFIG, and that you have access to the SharePoint site.</p></div>`;
   }
