@@ -333,10 +333,10 @@ table.dir tbody tr:hover td{background:#f8f9fa}
    Leave clientId empty to run in demo mode with sample data.
    ============================================================ */
 const CONFIG = {
-  clientId: '',                          // Entra app registration: Application (client) ID
-  tenantId: '',                          // Entra app registration: Directory (tenant) ID
-  siteHost: 'YOURTENANT.sharepoint.com', // host of your SharePoint site
-  sitePath: '/sites/YourTeamSite',       // path of the site that holds the three lists
+  clientId: '7194444d-dc63-46a2-9ec4-044347545197',                          // Entra app registration: Application (client) ID
+  tenantId: '3e32dd7c-41f6-492d-a1a3-c58eb02cf4f8',                          // Entra app registration: Directory (tenant) ID
+  siteHost: 'sage365.sharepoint.com', // host of your SharePoint site
+  sitePath: '/sites/AffiliateMarketing',       // path of the site that holds the three lists
   lists: { partners: 'Partners', updates: 'Updates', tasks: 'Tasks', links: 'Links' },
   // Internal column names in SharePoint (create columns without spaces, rename later if you like)
   fields: {
@@ -378,7 +378,7 @@ const CONFIG = {
     items: ['Check budget pacing with agency', 'Review all blocked tasks'],
     cadence: 'weekly',                 // 'weekly' or 'monthly'
     dueWorkingDay: 2,                  // nth working day of the month (or week)
-    owner: ''                          // your name or email address; tasks go to this person
+    owner: 'alexander.feist@sage.com'                          // your name or email address; tasks go to this person
   },
   attachmentsFolder: 'Affiliate Hub Attachments',
   maxFileMB: 100,
